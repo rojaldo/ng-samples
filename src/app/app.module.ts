@@ -12,6 +12,9 @@ import { HeroeslistComponent } from './components/heroes/heroeslist/heroeslist.c
 import { HeroformComponent } from './components/heroes/heroform/heroform.component';
 import { HeroesService } from './services/heroes.service';
 import { CalculatorService } from './services/calculator.service';
+import { HttpClientModule } from '@angular/common/http';
+import { ApodComponent } from './components/apod/apod/apod.component';
+import { ApodService } from './services/apod.service';
 
 @NgModule({
   declarations: [
@@ -21,14 +24,20 @@ import { CalculatorService } from './services/calculator.service';
     KeyboardComponent,
     HeroesComponent,
     HeroeslistComponent,
-    HeroformComponent
+    HeroformComponent,
+    ApodComponent
   ],
   imports: [
     BrowserModule,
     NgbModule,
-    FormsModule
+    FormsModule,
+    HttpClientModule
   ],
-  providers: [HeroesService, CalculatorService],
+  providers: [
+    HeroesService, 
+    CalculatorService, 
+    ApodService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
