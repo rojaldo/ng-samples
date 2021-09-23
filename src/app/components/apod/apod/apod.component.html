@@ -1,8 +1,21 @@
-<ngb-datepicker #dp [(ngModel)]="selectedDate" (dateSelect)="onDateSelected()"></ngb-datepicker>
+<!-- <ngb-datepicker #dp [(ngModel)]="selectedDate" (dateSelect)="onDateSelected()"></ngb-datepicker>
+<pre>Model: {{ selectedDate | json }}</pre> -->
 
-<pre>Model: {{ selectedDate | json }}</pre>
+<ngb-datepicker #dp (dateSelect)="onDateSelection($event)" [dayTemplate]="t" outsideDays="hidden">
+</ngb-datepicker>
 
-<div class="jumbotron">
+<ng-template #t let-date let-focused="focused">
+    <span class="custom-day"
+          [class.focused]="focused"
+          [class.range]="isRange(date)"
+          [class.faded]="isHovered(date) || isInside(date)"
+          (mouseenter)="hoveredDate = date"
+          (mouseleave)="hoveredDate = null">
+      {{ date.day }}
+    </span>
+  </ng-template>
+
+<!-- <div class="jumbotron">
     <h1 class="display-3">{{apod.title}}</h1>
     <p class="lead">{{apod.date}}</p>
     <img *ngIf="apod.media_type === 'image'" [src]="apod.url" [alt]="apod.title" class="w-100 mx-auto">
@@ -12,4 +25,18 @@
     <p class="lead">
         <a class="btn btn-primary btn-lg" href="Jumbo action link" role="button">Jumbo action name</a>
     </p>
+</div> -->
+
+
+<div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4" *ngFor="let apod of apodArray">
+        <div class="card">
+            <img class="card-img-top" *ngIf="apod.media_type === 'image'" [src]="apod.url" alt="" class="w-100 mx-auto">
+            <youtube-player *ngIf="apod.media_type === 'video'" [videoId]="getVideoID(apod.url)" class="w-100 mx-auto"></youtube-player>
+            <div class="card-body">
+                <h4 class="card-title">{{apod.title}}</h4>
+                <p class="card-text">{{apod.explanation}}</p>
+            </div>
+        </div>
+    </div>
 </div>

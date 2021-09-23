@@ -1,20 +1,48 @@
 import { Component, OnInit } from '@angular/core';
-import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
+import { NgbCalendar, NgbDate, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 import { NgbDateStructAdapter } from '@ng-bootstrap/ng-bootstrap/datepicker/adapters/ngb-date-adapter';
 import { ApodService } from 'src/app/services/apod.service';
 
 @Component({
   selector: 'app-apod',
   templateUrl: './apod.component.html',
-  styleUrls: ['./apod.component.scss']
+  // styleUrls: ['./apod.component.scss'],
+  styles: [`
+    .custom-day {
+      text-align: center;
+      padding: 0.185rem 0.25rem;
+      display: inline-block;
+      height: 2rem;
+      width: 2rem;
+    }
+    .custom-day.focused {
+      background-color: #e6e6e6;
+    }
+    .custom-day.range, .custom-day:hover {
+      background-color: rgb(2, 117, 216);
+      color: white;
+    }
+    .custom-day.faded {
+      background-color: rgba(2, 117, 216, 0.5);
+    }
+  `]
 })
 export class ApodComponent implements OnInit {
 
   apod: any = {}
   selectedDate: NgbDateStruct = { year: new Date().getFullYear(), month: new Date().getMonth() + 1, day: new Date().getDate() };
   apiLoaded = false;
+  apodArray: any[] = [];
 
-  constructor(public service: ApodService) { }
+  hoveredDate: NgbDate | null = null;
+  fromDate: NgbDate;
+  toDate: NgbDate | null = null;
+
+  constructor(public service: ApodService, calendar: NgbCalendar) { 
+    this.fromDate = calendar.getNext(calendar.getToday(), 'd', -10);
+    this.toDate = calendar.getToday();
+
+  }
 
   ngOnInit(): void {
     if (!this.apiLoaded) {
@@ -52,6 +80,36 @@ export class ApodComponent implements OnInit {
     var regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
     var match = url.match(regExp);
     return (match && match[7].length == 11) ? match[7] : '';
+  }
+
+  onDateSelection(date: NgbDate) {
+    if (!this.fromDate && !this.toDate) {
+      this.fromDate = date;
+    } else if (this.fromDate && !this.toDate && date.after(this.fromDate)) {
+      this.toDate = date;
+      const startDateString = this.fromDate.year + '-' + this.fromDate.month + '-' + this.fromDate.day;
+      const endDateString = this.toDate.year + '-' + this.toDate.month + '-' + this.toDate.day;
+      this.service.getApod(startDateString, endDateString).subscribe(
+        (data) => {this.apodArray = data},
+        (error) => this.processError(error)
+      );
+  
+    } else {
+      this.toDate = null;
+      this.fromDate = date;
+    }
+  }
+
+  isHovered(date: NgbDate) {
+    return this.fromDate && !this.toDate && this.hoveredDate && date.after(this.fromDate) && date.before(this.hoveredDate);
+  }
+
+  isInside(date: NgbDate) {
+    return this.toDate && date.after(this.fromDate) && date.before(this.toDate);
+  }
+
+  isRange(date: NgbDate) {
+    return date.equals(this.fromDate) || (this.toDate && date.equals(this.toDate)) || this.isInside(date) || this.isHovered(date);
   }
 
 }
