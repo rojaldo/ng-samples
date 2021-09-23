@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 @Injectable()
 export class ApodService {
 
-  key = 'tqz634Z1x0LiJzjbhSyUoExrZaGKLM0MG1VnROR6';
+  key = 'DEMO_KEY';
 
   constructor(public http: HttpClient) { }
 
