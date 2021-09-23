@@ -1,7 +1,12 @@
+<ngb-datepicker #dp [(ngModel)]="selectedDate" (dateSelect)="onDateSelected()"></ngb-datepicker>
+
+<pre>Model: {{ selectedDate | json }}</pre>
+
 <div class="jumbotron">
     <h1 class="display-3">{{apod.title}}</h1>
     <p class="lead">{{apod.date}}</p>
-    <img [src]="apod.url" [alt]="apod.title" class="w-100 mx-auto">
+    <img *ngIf="apod.media_type === 'image'" [src]="apod.url" [alt]="apod.title" class="w-100 mx-auto">
+    <youtube-player *ngIf="apod.media_type === 'video'" [videoId]="getVideoID(apod.url)" class="mx-auto"></youtube-player>
     <hr class="my-2">
     <p>{{apod.explanation}}</p>
     <p class="lead">

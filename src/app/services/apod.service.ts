@@ -5,9 +5,14 @@ import { Observable } from 'rxjs';
 @Injectable()
 export class ApodService {
 
+  key = 'DEMO_KEY';
+
   constructor(public http: HttpClient) { }
 
-  getApod(): Observable<any> {
-    return this.http.get('https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY')
+  getApod(dateString?: string): Observable<any> {
+    if (dateString != undefined) {
+      return this.http.get('https://api.nasa.gov/planetary/apod?date=' + dateString + '&api_key=' + this.key);
+    }
+    return this.http.get('https://api.nasa.gov/planetary/apod?api_key=' + this.key)
   }
 }
