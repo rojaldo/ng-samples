@@ -6,26 +6,8 @@ import { ApodService } from 'src/app/services/apod.service';
 @Component({
   selector: 'app-apod',
   templateUrl: './apod.component.html',
-  // styleUrls: ['./apod.component.scss'],
-  styles: [`
-    .custom-day {
-      text-align: center;
-      padding: 0.185rem 0.25rem;
-      display: inline-block;
-      height: 2rem;
-      width: 2rem;
-    }
-    .custom-day.focused {
-      background-color: #e6e6e6;
-    }
-    .custom-day.range, .custom-day:hover {
-      background-color: rgb(2, 117, 216);
-      color: white;
-    }
-    .custom-day.faded {
-      background-color: rgba(2, 117, 216, 0.5);
-    }
-  `]
+  styleUrls: ['./apod.component.scss'],
+  
 })
 export class ApodComponent implements OnInit {
 
@@ -74,12 +56,6 @@ export class ApodComponent implements OnInit {
       (data) => this.processData(data),
       (error) => this.processError(error)
     );
-  }
-
-  getVideoID(url: string): string {
-    var regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
-    var match = url.match(regExp);
-    return (match && match[7].length == 11) ? match[7] : '';
   }
 
   onDateSelection(date: NgbDate) {

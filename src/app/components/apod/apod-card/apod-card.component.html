@@ -1,0 +1,8 @@
+<div class="card">
+    <img class="card-img-top" *ngIf="apod.media_type === 'image'" [src]="apod.url" alt="" class="w-100 mx-auto">
+    <youtube-player *ngIf="apod.media_type === 'video'" [videoId]="getVideoID(apod.url)" class="w-100 mx-auto"></youtube-player>
+    <div class="card-body">
+        <h4 class="card-title">{{apod.title}}</h4>
+        <p class="card-text">{{apod.explanation}}</p>
+    </div>
+</div>
